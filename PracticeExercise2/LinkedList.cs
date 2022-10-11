@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+
 namespace PracticeExercise2
 {
 
@@ -20,22 +22,22 @@ namespace PracticeExercise2
 
     }
 
-	public class LinkedList<T>: IList<T>
-	{
+    public class LinkedList<T> : IList<T>
+    {
         public LinkedListNode<T> Head { get; set; }
         public LinkedListNode<T> Tail { get; set; }
 
-		public LinkedList()
-		{
+        public LinkedList()
+        {
             Head = null;
             Tail = null;
-		}
+        }
 
-        public T? First => throw new NotImplementedException();
+        public T? First => IsEmpty ? default(T) : Head.Data;
 
-        public T? Last => throw new NotImplementedException();
+        public T? Last => IsEmpty ? default(T) : Tail.Data;
 
-        public bool IsEmpty => throw new NotImplementedException();
+        public bool IsEmpty => Length == 0; 
 
         private int length = 0;
         public int Length => length;
@@ -70,7 +72,16 @@ namespace PracticeExercise2
 
         public bool Contains(T value)
         {
-            throw new NotImplementedException();
+            var currentNode = Head;
+            for (int i = 0; i < length; i++)
+            {
+                if (currentNode.Data.Equals(value))
+                {
+                    return true;
+                }
+                currentNode = currentNode.Next;
+            }
+            return false;
         }
 
         public int FirstIndexOf(T value)
@@ -95,29 +106,124 @@ namespace PracticeExercise2
 
         public T Get(int index)
         {
-            throw new NotImplementedException();
+            if (index < 0 || index >= length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            var currentNode = Head;
+            for (int i = 0; i < index; i++)
+            {
+                currentNode = currentNode.Next;
+            }
+
+            return currentNode.Data;
         }
 
         public void InsertAfter(T newValue, int existingValue)
         {
+            var currentNode = Head;
+            var newNode = new LinkedListNode<T>(newValue);
+            for (int i = 0; i < length; i++)
+            {
+                if (currentNode.Data.Equals(existingValue))
+                {
+                    newNode.Next = currentNode.Next;
+                    currentNode.Next = newNode;
+                    if (newNode.Next == null)
+                    {
+                        Tail = newNode;
+                    }
+                    length++;
+                    return;
+                }
+                currentNode = currentNode.Next;
+            }
 
-            length++;
-
-            throw new NotImplementedException();
+            Append(newValue);
         }
 
         public void InsertAt(T value, int index)
         {
-            length++;
+            if ((index > (length)) || (index < 0))
+            {
+                throw new IndexOutOfRangeException();
+            }
+            else if (index == 0)
+            {
+                Prepend(value);
+            }
+            else if (index == length)
+            {
+                Append(value);
+                length++;
+            }
+            else
+            {
+                var newNode = new LinkedListNode<T>(value);
+                var currentNode = Head;
+                for (int i = 0; i < index - 1; i++)
+                {
+                    currentNode = currentNode.Next;
+                }
+                newNode.Next = currentNode.Next;
+                currentNode.Next = newNode;
+                if (currentNode == Tail)
+                {
+                    Tail = newNode;
+                }
+                length++;
+            }
 
-            throw new NotImplementedException();
+            //in class work:
+
+            //if (index < 0 || index > length)
+            //{
+            //    throw new IndexOutOfRangeException();
+            //}
+
+            //if (index == 0)
+            //{
+            //    Prepend(value);
+            //}
+
+            //var currentNode = Head;
+            //int currentIndex = 0;
+
+            //while (currentNode != null)
+            //{
+            //    if (currentIndex == index - 1)
+            //    {
+            //        var newNode = new LinkedListNode<T>(value);
+            //        newNode.Next = currentNode.Next;
+            //        currentNode.Next = newNode;
+
+            //        if (currentNode == Tail)
+            //        {
+            //            Tail = newNode;
+            //        }
+            //        length++;
+            //    }
+            //    currentNode = currentNode.Next;
+            //    currentIndex++;
+            //}
         }
 
         public void Prepend(T value)
         {
-            length++;
+            var newNode = new LinkedListNode<T>(value);
 
-            throw new NotImplementedException();
+            if (IsEmpty)
+            {
+                Head = newNode;
+                Tail = newNode;
+            }
+            else
+            {
+                newNode.Next = Head;
+                Head = newNode;
+            }
+
+            length++;
         }
 
         public void Remove(T value)
@@ -175,15 +281,25 @@ namespace PracticeExercise2
 
         public void RemoveAt(int index)
         {
-
-            // length--;
-
-            throw new NotImplementedException();
+            if ((index > (length - 1)) || (index < 0))
+            {
+                throw new IndexOutOfRangeException();
+            }
+            var value = Get(index);
+            Remove(value);
         }
 
         public IList<T> Reverse()
         {
-            throw new NotImplementedException();
+            IList<T> reversedList = new LinkedList<T>();
+            var currentNode = Head;
+            for (int i = 0; i < length; i++)
+            {
+                reversedList.Prepend(currentNode.Data);
+                currentNode = currentNode.Next;
+            }
+
+            return reversedList;
         }
 
         public override string ToString()
