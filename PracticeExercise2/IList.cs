@@ -8,7 +8,7 @@ namespace PracticeExercise2
         void Append(T value);
         void Prepend(T value);
 
-        void InsertAfter(T newValue, int existingValue);
+        void InsertAfter(T newValue, T existingValue);
         void InsertAt(T value, int index);
 
         void Remove(T value);

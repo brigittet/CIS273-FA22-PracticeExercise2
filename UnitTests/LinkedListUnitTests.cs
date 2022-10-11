@@ -390,6 +390,12 @@ namespace UnitTests
 
             Assert.AreEqual(45, list.Get(45));
             Assert.AreEqual(10, list.Get(10));
+
+
+            Assert.ThrowsException<IndexOutOfRangeException>(() =>
+            {
+                list.Get(142);
+            });
         }
     }
 }

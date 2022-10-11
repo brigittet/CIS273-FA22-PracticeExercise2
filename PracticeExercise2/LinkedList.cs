@@ -119,7 +119,7 @@ namespace PracticeExercise2
             return currentNode.Data;
         }
 
-        public void InsertAfter(T newValue, int existingValue)
+        public void InsertAfter(T newValue, T existingValue)
         {
             var currentNode = Head;
             var newNode = new LinkedListNode<T>(newValue);
